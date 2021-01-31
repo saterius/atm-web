@@ -1,5 +1,6 @@
 package th.ac.ku.atm.service;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -19,8 +20,8 @@ public class BankAccountService {
         this.restTemplate = restTemplate;
     }
 
-    public List<BankAccount> getCustomerBankAccounts(int customerId) {
-        // connect to BankAccount API service
+    public List<BankAccount> getCustomerBankAccount(int customerId) {
+        // connect to BankAccount API Service
         String url = "http://localhost:8091/api/bankaccount/customer/" + customerId;
 
         ResponseEntity<BankAccount[]> response =
@@ -30,7 +31,24 @@ public class BankAccountService {
         return Arrays.asList(accounts);
     }
 
-    //    public List<BankAccount> getBankAccount() {
-//        return new ArrayList<>(this.bankAccountsList);
+    public List<BankAccount> getBankAccounts() {
+        String url = "http://localhost:8091/api/bankaccount/";
+
+        ResponseEntity<BankAccount[]> response =
+                restTemplate.getForEntity(url, BankAccount[].class);
+
+        BankAccount[] accounts = response.getBody();
+        return Arrays.asList(accounts);
+    }
+
+
+//    public void createBankAccount(BankAccount bankAccount) {
+//        bankAccountList.add(bankAccount);
 //    }
+
+    public void openAccount(BankAccount bankAccount) {
+        String url = "http://localhost:8091/api/bankaccount";
+
+        restTemplate.postForObject(url, bankAccount, BankAccount.class);
+    }
 }
